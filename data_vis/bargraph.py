@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 from scipy import stats
 
@@ -10,16 +9,8 @@ import seaborn as sns
 from typing import List
 import json
 import requests
- 
-ENDPOINT_DICT = {
-  "BTC": "",
-  "ETC": "",
-  "LN": "https://1ml.com/node?json=true"
-}
 
-def call_api(endpoint: str):
-  res = requests.get(endpoint)
-  return res.json()
+from ..lib.data_loader import DataLoader
 
 def preprocessing(data_list: json) -> List[int]:
   alias_list = []
@@ -30,7 +21,8 @@ def preprocessing(data_list: json) -> List[int]:
   return alias_list, capacity_list
 
 if __name__ == "__main__":
-  json_data = call_api(ENDPOINT_DICT["LN"])
+  data_loader = DataLoader.new(3)
+  json_data = data_loader.get_data()
   alias_list, capacity_list = preprocessing(json_data)
 
   plt.bar(range(len(capacity_list)), capacity_list)
